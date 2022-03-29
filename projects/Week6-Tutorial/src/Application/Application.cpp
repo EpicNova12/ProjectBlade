@@ -52,6 +52,7 @@
 
 // Layers
 #include "Layers/RenderLayer.h"
+#include "Layers/PostProcessingLayer.h"
 #include "Layers/InterfaceLayer.h"
 #include "Layers/DefaultSceneLayer.h"
 #include "Layers/LogicUpdateLayer.h"
@@ -151,6 +152,7 @@ void Application::_Run()
 	_layers.push_back(std::make_shared<LogicUpdateLayer>());
 	_layers.push_back(std::make_shared<RenderLayer>());
 	_layers.push_back(std::make_shared<ParticleLayer>());
+	_layers.push_back(std::make_shared<PostProcessingLayer>());
 	//_layers.push_back(std::make_shared<InstancedRenderingTestLayer>());
 	_layers.push_back(std::make_shared<InterfaceLayer>());
 
@@ -191,11 +193,23 @@ void Application::_Run()
 
 	//Materials
 	//Variables
+	//---------------------------------------------------------------------
 	glm::vec3 swordRot(90.0f, 0.0f, -180.0f);
 	glm::vec3 ballRot(0.0f, 0.0f, 0.0f);
-
+\
 	bool vAttack=false;
 	bool hAttack = false;
+	bool dAttack1 = false;
+	bool dAttack2 = false;
+
+	//Ball Stuff
+	int ballType = 1;
+	//Ball 1 == Vertical
+	// Ball 2 == Horizontal
+	// Ball 2 == Diagonal 1
+	// Ball 2 == Diagonal 2
+
+	//---------------------------------------------------------------------
 	// Infinite loop as long as the application is running
 	while (_isRunning) {
 		// Handle scene switching
@@ -242,16 +256,37 @@ void Application::_Run()
 		CurrentScene();
 		
 		ball->SetRotation(ballRot);
-		ballRot = glm::vec3(ballRot.x+1.0f, 0.0f, 0.0f);
-		if (ballRot.x >= 360.0f)
+		//ballRot = glm::vec3(ballRot.x+1.0f, 0.0f, 0.0f);
+		//Will set up rand later
+		//std::cout << "ballType: " << ballType << "\n";
+		if (ballType == 1)
 		{
 			ballRot.x = 0.0f;
 		}
+		else if (ballType == 2)
+		{
+			ballRot.x = 90.0f;
+		}
+		else if (ballType == 3)
+		{
+			ballRot.x = 45.0f;
+		}
+		else if (ballType == 4)
+		{
+			ballRot.x = 135.0f;
+		}
 		//Input
+		//Vertical Attack
 		if (InputEngine::IsKeyDown(GLFW_KEY_UP)|| InputEngine::IsKeyDown(GLFW_KEY_DOWN))
 		{
 			vAttack = true;
 			hAttack = false;
+			dAttack1 = false;
+			dAttack2 = false;
+			if (ballType == 1)
+			{
+				ballType = ballType + 1;
+			}
 		}
 		if (vAttack == true)
 		{
@@ -266,6 +301,7 @@ void Application::_Run()
 				vAttack = false;
 			}
 		}
+		//Horizontal Attack
 		if (InputEngine::IsKeyDown(GLFW_KEY_RIGHT) || InputEngine::IsKeyDown(GLFW_KEY_LEFT))
 		{
 			if (hAttack == false)
@@ -274,10 +310,16 @@ void Application::_Run()
 			}
 			hAttack = true;
 			vAttack = false;
+			dAttack1 = false;
+			dAttack2 = false;
+			if (ballType == 2)
+			{
+				ballType = ballType + 1;
+			}
 		}
 		if (hAttack == true)
 		{
-			sword->SetPostion(glm::vec3(-3.05f, 0.0f, 2.83f));
+			sword->SetPostion(glm::vec3(-3.05f, 0.0f, 4.5f));
 			sword->SetRotation(swordRot);
 			swordRot = glm::vec3(0.0f, 0.0f, swordRot.z-3.5f);
 			if (swordRot.z <= -180.0f)
@@ -287,6 +329,68 @@ void Application::_Run()
 				swordRot = glm::vec3(90.0f, 0.0f, -180.0);
 				hAttack = false;
 			}
+		}
+		//Diagonoal Attack 1
+		if ((InputEngine::IsKeyDown(GLFW_KEY_UP) && InputEngine::IsKeyDown(GLFW_KEY_RIGHT)|| (InputEngine::IsKeyDown(GLFW_KEY_DOWN) && InputEngine::IsKeyDown(GLFW_KEY_LEFT))))
+		{
+			vAttack = false;
+			hAttack = false;
+			dAttack1 = true;
+			dAttack2 = false;
+
+			if (dAttack1 == false)
+			{
+				swordRot = glm::vec3(-30.0f, 0.0f, 0.0f);
+			}
+
+			if (ballType == 3)
+			{
+				ballType = ballType + 1;
+			}
+		}
+
+		if (dAttack1 == true)
+		{
+			sword->SetPostion(glm::vec3(-3.05f, 0.0f, 4.5f));
+			sword->SetRotation(swordRot);
+			swordRot = glm::vec3(swordRot.x-3.5f, swordRot.y - 3.5f, -180.0f);
+			if (swordRot.y <= -142.0f)
+			{
+				sword->SetPostion(glm::vec3(-3.05f, -2.75f, 2.83f));
+				sword->SetRotation(glm::vec3(90.0f, 0.0f, -180.0f));
+				swordRot = glm::vec3(90.0f, 0.0f, -180.0);
+				vAttack = false;
+			}
+		}
+		//Diagonoal Attack 2
+		if ((InputEngine::IsKeyDown(GLFW_KEY_UP) && InputEngine::IsKeyDown(GLFW_KEY_LEFT) || (InputEngine::IsKeyDown(GLFW_KEY_DOWN) && InputEngine::IsKeyDown(GLFW_KEY_RIGHT))))
+		{
+			vAttack = false;
+			hAttack = false;
+			dAttack1 = false;
+			dAttack2 = true;
+
+			if (ballType == 4)
+			{
+				ballType = ballType + 1;
+			}
+		}
+		if (vAttack == true)
+		{
+			sword->SetPostion(glm::vec3(-3.05f, 0.0f, 2.83f));
+			sword->SetRotation(swordRot);
+			swordRot = glm::vec3(90.0f, swordRot.y - 3.5f, -180.0f);
+			if (swordRot.y <= -142.0f)
+			{
+				sword->SetPostion(glm::vec3(-3.05f, -2.75f, 2.83f));
+				sword->SetRotation(glm::vec3(90.0f, 0.0f, -180.0f));
+				swordRot = glm::vec3(90.0f, 0.0f, -180.0);
+				vAttack = false;
+			}
+		}
+		if (ballType >= 5)
+		{
+			ballType = 1;
 		}
 		// ---------------------------------------------------------------------------------------
 

@@ -94,6 +94,7 @@ public:
 	RenderFlags GetRenderFlags() const;
 
 	const Framebuffer::Sptr& GetLightingBuffer() const;
+	const Framebuffer::Sptr& RenderLayer::GetGBuffer() const;
 
 	// Inherited from ApplicationLayer
 

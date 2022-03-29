@@ -494,14 +494,14 @@ void DefaultSceneLayer::_CreateScene()
 
 		for (int ix = 0; ix < 1; ix++) {
 			//light->SetPostion(glm::vec3(glm::diskRand(25.0f), 1.0f));
-			GameObject::Sptr light = scene->CreateGameObject("Light");
-			light->SetPostion(glm::vec3(-12.1,0.0,10.0));
+			//GameObject::Sptr light = scene->CreateGameObject("Light");
+			/*light->SetPostion(glm::vec3(-12.1, 0.0, 10.0));
 			//lightParent->AddChild(light);
 
 			Light::Sptr lightComponent = light->Add<Light>();
 			lightComponent->SetColor(glm::vec3(1.0f,1.0f,1.0f));
 			lightComponent->SetRadius(5000.0f);
-			lightComponent->SetIntensity(10);
+			lightComponent->SetIntensity(10);*/
 		}
 
 		// We'll create a mesh that is a simple plane that we can resize later

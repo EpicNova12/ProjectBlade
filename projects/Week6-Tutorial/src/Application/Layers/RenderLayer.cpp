@@ -179,7 +179,7 @@ void RenderLayer::OnPostRender() {
 
 	Application& app = Application::Get();
 	const glm::uvec4& viewport = app.GetPrimaryViewport();
-
+	
 	// Unbind our G-Buffer
 	_primaryFBO->Unbind();
 
@@ -486,3 +486,7 @@ const Framebuffer::Sptr& RenderLayer::GetLightingBuffer() const {
 	return _lightingFBO;
 }
 
+const Framebuffer::Sptr& RenderLayer::GetGBuffer() const 
+{
+	return _primaryFBO;
+}
