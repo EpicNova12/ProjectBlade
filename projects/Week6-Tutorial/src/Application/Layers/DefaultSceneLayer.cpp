@@ -293,6 +293,11 @@ void DefaultSceneLayer::_CreateScene()
 		Texture2D::Sptr ballTex = ResourceManager::CreateAsset<Texture2D>("textures/BallTexture.png");
 		Texture2D::Sptr pipeTex = ResourceManager::CreateAsset<Texture2D>("textures/PipeTexture.png");
 
+		//Emissive Maps
+		Texture2D::Sptr worldTex_EMap = ResourceManager::CreateAsset<Texture2D>("textures/WorldTexture_EMap.png");
+		Texture2D::Sptr swordTex_EMap = ResourceManager::CreateAsset<Texture2D>("textures/SwordTexture_EMap.png");
+		Texture2D::Sptr ballTex_EMap = ResourceManager::CreateAsset<Texture2D>("textures/BallTexture_EMap.png");
+		Texture2D::Sptr pipeTex_EMap = ResourceManager::CreateAsset<Texture2D>("textures/PipeTexture_EMap.png");
 
 		leafTex->SetMinFilter(MinFilter::Nearest);
 		leafTex->SetMagFilter(MagFilter::Nearest);
@@ -374,6 +379,10 @@ void DefaultSceneLayer::_CreateScene()
 			worldMat->Set("u_Custom.rim", 1.0f);
 			worldMat->Set("u_Custom.isOn", false);
 			worldMat->Set("toggleColorCorrect",false);
+			worldMat->Set("emissiveMap", worldTex_EMap);
+			worldMat->Set("emissiveColor", glm::vec3(0.0f, 1.0f, 0.0f));
+			worldMat->Set("emissiveIntensity", 1.0f);
+
 			worldMat->Set("texColor", worldTex);
 		}
 		materials.push_back(worldMat);
@@ -393,10 +402,14 @@ void DefaultSceneLayer::_CreateScene()
 			swordMat->Set("u_Custom.rim", 1.0f);
 			swordMat->Set("u_Custom.isOn", false);
 			swordMat->Set("toggleColorCorrect", true);
+			swordMat->Set("emissiveMap", swordTex_EMap);
+			swordMat->Set("emissiveColor", glm::vec3(0.0f, 0.0f, 1.0f));
+			swordMat->Set("emissiveIntensity", 1.0f);
+
 			swordMat->Set("texColor", swordTex);
 		}
 		materials.push_back(swordMat);
-
+		
 		Material::Sptr ballMat = ResourceManager::CreateAsset<Material>(StandardShader);
 		{
 			ballMat->Name = "BallMaterial";
@@ -413,6 +426,10 @@ void DefaultSceneLayer::_CreateScene()
 			ballMat->Set("u_Custom.rim", 1.0f);
 			ballMat->Set("u_Custom.isOn", false);
 			ballMat->Set("toggleColorCorrect", true);
+			ballMat->Set("emissiveMap", ballTex_EMap);
+			ballMat->Set("emissiveColor", glm::vec3(1.0f,0.0f,0.0f));
+			ballMat->Set("emissiveIntensity", 1.0f);
+
 			ballMat->Set("texColor", ballTex);
 
 		}
@@ -494,14 +511,14 @@ void DefaultSceneLayer::_CreateScene()
 
 		for (int ix = 0; ix < 1; ix++) {
 			//light->SetPostion(glm::vec3(glm::diskRand(25.0f), 1.0f));
-			//GameObject::Sptr light = scene->CreateGameObject("Light");
-			/*light->SetPostion(glm::vec3(-12.1, 0.0, 10.0));
+			GameObject::Sptr light = scene->CreateGameObject("Light");
+			light->SetPostion(glm::vec3(-17.1, 0.0, -3.8));
 			//lightParent->AddChild(light);
 
 			Light::Sptr lightComponent = light->Add<Light>();
 			lightComponent->SetColor(glm::vec3(1.0f,1.0f,1.0f));
-			lightComponent->SetRadius(5000.0f);
-			lightComponent->SetIntensity(10);*/
+			lightComponent->SetRadius(20.0f);
+			lightComponent->SetIntensity(18.0f);
 		}
 
 		// We'll create a mesh that is a simple plane that we can resize later
