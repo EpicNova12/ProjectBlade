@@ -29,8 +29,8 @@ void PostProcessingLayer::OnAppLoad(const nlohmann::json& config)
 {
 	// Loads some effects in
 	//_effects.push_back(std::make_shared<ColorCorrectionEffect>());
-	//_effects.push_back(std::make_shared<BoxFilter3x3>());
-	//_effects.push_back(std::make_shared<BoxFilter5x5>());
+	_effects.push_back(std::make_shared<BoxFilter3x3>());
+	_effects.push_back(std::make_shared<BoxFilter5x5>());
 	//_effects.push_back(std::make_shared<OutlineEffect>());
 
 	Application& app = Application::Get();
@@ -81,7 +81,7 @@ void PostProcessingLayer::OnPostRender()
 
 	// Bind the quad VAO so our effects can use it
 	_quadVAO->Bind();
-
+	
 	// Iterate over all the effects in the queue
 	for (const auto& effect : _effects) {
 		// Only render if it's enabled

@@ -27,7 +27,7 @@
 #include "Graphics/GuiBatcher.h"
 #include "Graphics/Framebuffer.h"
 
-// Gameplay
+//Gameplay
 #include "Gameplay/Material.h"
 #include "Gameplay/GameObject.h"
 #include "Gameplay/Scene.h"
@@ -52,13 +52,13 @@
 
 // Layers
 #include "Layers/RenderLayer.h"
-#include "Layers/PostProcessingLayer.h"
 #include "Layers/InterfaceLayer.h"
 #include "Layers/DefaultSceneLayer.h"
 #include "Layers/LogicUpdateLayer.h"
 #include "Layers/ImGuiDebugLayer.h"
 #include "Layers/InstancedRenderingTestLayer.h"
 #include "Layers/ParticleLayer.h"
+#include "Layers/PostProcessingLayer.h"
 
 Application* Application::_singleton = nullptr;
 std::string Application::_applicationName = "INFR-2350U - DEMO";
@@ -68,16 +68,15 @@ std::string Application::_applicationName = "INFR-2350U - DEMO";
 
 Application::Application() :
 	_window(nullptr),
-	_windowSize({DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT}),
+	_windowSize({ DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT }),
 	_isRunning(false),
 	_isEditor(true),
 	_windowTitle("INFR - 2350U"),
 	_currentScene(nullptr),
-	_targetScene(nullptr),
-	_renderOutput(nullptr)
+	_targetScene(nullptr)
 { }
 
-Application::~Application() = default; 
+Application::~Application() = default;
 
 Application& Application::Get() {
 	LOG_ASSERT(_singleton != nullptr, "Failed to get application! Get was called before the application was started!");
@@ -99,11 +98,11 @@ const glm::uvec4& Application::GetPrimaryViewport() const {
 	return _primaryViewport;
 }
 
-void Application::SetPrimaryViewport(const glm::uvec4& value) {
+void Application::SetPrimaryViewport(const glm::uvec4 & value) {
 	_primaryViewport = value;
 }
 
-void Application::ResizeWindow(const glm::ivec2& newSize)
+void Application::ResizeWindow(const glm::ivec2 & newSize)
 {
 	_HandleWindowSizeChanged(newSize);
 }
@@ -112,8 +111,8 @@ void Application::Quit() {
 	_isRunning = false;
 }
 
-bool Application::LoadScene(const std::string& path) {
-	if (std::filesystem::exists(path)) { 
+bool Application::LoadScene(const std::string & path) {
+	if (std::filesystem::exists(path)) {
 
 		std::string manifestPath = std::filesystem::path(path).stem().string() + "-manifest.json";
 		if (std::filesystem::exists(manifestPath)) {
@@ -128,7 +127,7 @@ bool Application::LoadScene(const std::string& path) {
 	return false;
 }
 
-void Application::LoadScene(const Gameplay::Scene::Sptr& scene) {
+void Application::LoadScene(const Gameplay::Scene::Sptr & scene) {
 	_targetScene = scene;
 }
 
@@ -153,7 +152,6 @@ void Application::_Run()
 	_layers.push_back(std::make_shared<RenderLayer>());
 	_layers.push_back(std::make_shared<ParticleLayer>());
 	_layers.push_back(std::make_shared<PostProcessingLayer>());
-	//_layers.push_back(std::make_shared<InstancedRenderingTestLayer>());
 	_layers.push_back(std::make_shared<InterfaceLayer>());
 
 	// If we're in editor mode, we add all the editor layers
@@ -179,7 +177,7 @@ void Application::_Run()
 	_Load();
 
 	// Grab current time as the previous frame
-	double lastFrame =  glfwGetTime();
+	double lastFrame = glfwGetTime();
 
 	// Done loading, app is now running!
 	_isRunning = true;
@@ -196,8 +194,8 @@ void Application::_Run()
 	//---------------------------------------------------------------------
 	glm::vec3 swordRot(90.0f, 0.0f, -180.0f);
 	glm::vec3 ballRot(0.0f, 0.0f, 0.0f);
-\
-	bool vAttack=false;
+
+	bool vAttack = false;
 	bool hAttack = false;
 	bool dAttack1 = false;
 	bool dAttack2 = false;
@@ -210,6 +208,7 @@ void Application::_Run()
 	// Ball 2 == Diagonal 2
 
 	//---------------------------------------------------------------------
+
 	// Infinite loop as long as the application is running
 	while (_isRunning) {
 		// Handle scene switching
@@ -248,13 +247,12 @@ void Application::_Run()
 			_Update();
 			_LateUpdate();
 			_PreRender();
-			_RenderScene(); 
+			_RenderScene();
 			_PostRender();
 		}
-
 		//Main Loop-------------------------------------------------------------------------------
 		CurrentScene();
-		
+
 		ball->SetRotation(ballRot);
 		//ballRot = glm::vec3(ballRot.x+1.0f, 0.0f, 0.0f);
 		//Will set up rand later
@@ -277,7 +275,7 @@ void Application::_Run()
 		}
 		//Input
 		//Vertical Attack
-		if (InputEngine::IsKeyDown(GLFW_KEY_UP)|| InputEngine::IsKeyDown(GLFW_KEY_DOWN))
+		if (InputEngine::IsKeyDown(GLFW_KEY_UP) || InputEngine::IsKeyDown(GLFW_KEY_DOWN))
 		{
 			vAttack = true;
 			hAttack = false;
@@ -292,7 +290,7 @@ void Application::_Run()
 		{
 			sword->SetPostion(glm::vec3(-3.05f, 0.0f, 2.83f));
 			sword->SetRotation(swordRot);
-			swordRot = glm::vec3(90.0f, swordRot.y-3.5f, -180.0f);
+			swordRot = glm::vec3(90.0f, swordRot.y - 3.5f, -180.0f);
 			if (swordRot.y <= -142.0f)
 			{
 				sword->SetPostion(glm::vec3(-3.05f, -2.75f, 2.83f));
@@ -321,7 +319,7 @@ void Application::_Run()
 		{
 			sword->SetPostion(glm::vec3(-3.05f, 0.0f, 4.5f));
 			sword->SetRotation(swordRot);
-			swordRot = glm::vec3(0.0f, 0.0f, swordRot.z-3.5f);
+			swordRot = glm::vec3(0.0f, 0.0f, swordRot.z - 3.5f);
 			if (swordRot.z <= -180.0f)
 			{
 				sword->SetPostion(glm::vec3(-3.05f, -2.75f, 2.83f));
@@ -331,7 +329,7 @@ void Application::_Run()
 			}
 		}
 		//Diagonoal Attack 1
-		if ((InputEngine::IsKeyDown(GLFW_KEY_UP) && InputEngine::IsKeyDown(GLFW_KEY_RIGHT)|| (InputEngine::IsKeyDown(GLFW_KEY_DOWN) && InputEngine::IsKeyDown(GLFW_KEY_LEFT))))
+		if ((InputEngine::IsKeyDown(GLFW_KEY_UP) && InputEngine::IsKeyDown(GLFW_KEY_RIGHT) || (InputEngine::IsKeyDown(GLFW_KEY_DOWN) && InputEngine::IsKeyDown(GLFW_KEY_LEFT))))
 		{
 			vAttack = false;
 			hAttack = false;
@@ -353,7 +351,7 @@ void Application::_Run()
 		{
 			sword->SetPostion(glm::vec3(-3.05f, 0.0f, 4.5f));
 			sword->SetRotation(swordRot);
-			swordRot = glm::vec3(swordRot.x-3.5f, swordRot.y - 3.5f, -180.0f);
+			swordRot = glm::vec3(swordRot.x - 3.5f, swordRot.y - 3.5f, -180.0f);
 			if (swordRot.y <= -142.0f)
 			{
 				sword->SetPostion(glm::vec3(-3.05f, -2.75f, 2.83f));
@@ -393,7 +391,6 @@ void Application::_Run()
 			ballType = 1;
 		}
 		// ---------------------------------------------------------------------------------------
-
 		// Store timing for next loop
 		lastFrame = thisFrame;
 
@@ -453,7 +450,7 @@ void Application::_Load() {
 
 	// Pass the window to the input engine and let it initialize itself
 	InputEngine::Init(_window);
-	
+
 	// Initialize our ImGui helper
 	ImGuiHelper::Init(_window);
 
@@ -478,7 +475,7 @@ void Application::_LateUpdate() {
 
 void Application::_PreRender()
 {
-	glm::ivec2 size ={ 0, 0 };
+	glm::ivec2 size = { 0, 0 };
 	glfwGetWindowSize(_window, &size.x, &size.y);
 	glViewport(0, 0, size.x, size.y);
 	glScissor(0, 0, size.x, size.y);
@@ -499,17 +496,13 @@ void Application::_RenderScene() {
 	for (const auto& layer : _layers) {
 		if (layer->Enabled && *(layer->Overrides & AppLayerFunctions::OnRender)) {
 			layer->OnRender(result);
-			Framebuffer::Sptr layerResult = layer->GetRenderOutput(); 
-			result = layerResult != nullptr ? layerResult : result;
 		}
 	}
-	_renderOutput = result;
-
 }
 
 void Application::_PostRender() {
 	// Note that we use a reverse iterator for post render
-	for (auto it = _layers.crbegin(); it != _layers.crend(); it++) {
+	for (auto it = _layers.begin(); it != _layers.end(); it++) {
 		const auto& layer = *it;
 		if (layer->Enabled && *(layer->Overrides & AppLayerFunctions::OnPostRender)) {
 			layer->OnPostRender();
@@ -543,7 +536,7 @@ void Application::_HandleSceneChange() {
 	}
 
 	_currentScene = _targetScene;
-	
+
 	// Let the layers know that we've loaded in a new scene
 	for (const auto& layer : _layers) {
 		if (layer->Enabled && *(layer->Overrides & AppLayerFunctions::OnSceneLoad)) {
@@ -562,7 +555,7 @@ void Application::_HandleSceneChange() {
 	_targetScene = nullptr;
 }
 
-void Application::_HandleWindowSizeChanged(const glm::ivec2& newSize) {
+void Application::_HandleWindowSizeChanged(const glm::ivec2 & newSize) {
 	for (const auto& layer : _layers) {
 		if (layer->Enabled && *(layer->Overrides & AppLayerFunctions::OnWindowResize)) {
 			layer->OnWindowResize(_windowSize, newSize);
@@ -597,7 +590,7 @@ void Application::_ConfigureSettings() {
 
 nlohmann::json Application::_GetDefaultAppSettings()
 {
-	nlohmann::json result ={};
+	nlohmann::json result = {};
 
 	for (const auto& layer : _layers) {
 		if (!layer->Name.empty()) {
@@ -609,7 +602,7 @@ nlohmann::json Application::_GetDefaultAppSettings()
 		}
 	}
 
-	result["window_width"]  = DEFAULT_WINDOW_WIDTH;
+	result["window_width"] = DEFAULT_WINDOW_WIDTH;
 	result["window_height"] = DEFAULT_WINDOW_HEIGHT;
 	return result;
 }

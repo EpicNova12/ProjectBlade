@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 
 #include "Application/ApplicationLayer.h"
 #include "Utils/Macros.h"
