@@ -289,7 +289,7 @@ void DefaultSceneLayer::_CreateScene()
 		Texture2D::Sptr    boxSpec      = ResourceManager::CreateAsset<Texture2D>("textures/box-specular.png");
 		Texture2D::Sptr    leafTex      = ResourceManager::CreateAsset<Texture2D>("textures/leaves.png");
 		Texture2D::Sptr worldTex = ResourceManager::CreateAsset<Texture2D>("textures/WorldTexture.png");
-		Texture2D::Sptr swordTex = ResourceManager::CreateAsset<Texture2D>("textures/SwordTexture.png");
+		Texture2D::Sptr swordTex = ResourceManager::CreateAsset<Texture2D>("textures/SwordTexture_V2.png");
 		Texture2D::Sptr ballTex = ResourceManager::CreateAsset<Texture2D>("textures/BallTexture.png");
 		Texture2D::Sptr pipeTex = ResourceManager::CreateAsset<Texture2D>("textures/PipeTexture.png");
 
@@ -330,7 +330,7 @@ void DefaultSceneLayer::_CreateScene()
 		toonLut->SetWrap(WrapMode::ClampToEdge);
 
 		// Here we'll load in the cubemap, as well as a special shader to handle drawing the skybox
-		TextureCube::Sptr testCubemap = ResourceManager::CreateAsset<TextureCube>("cubemaps/ocean/ocean.jpg");
+		TextureCube::Sptr SkyCubemap = ResourceManager::CreateAsset<TextureCube>("cubemaps/CityScape/CityScape.png");
 		ShaderProgram::Sptr      skyboxShader = ResourceManager::CreateAsset<ShaderProgram>(std::unordered_map<ShaderPartType, std::string>{
 			{ ShaderPartType::Vertex, "shaders/vertex_shaders/skybox_vert.glsl" },
 			{ ShaderPartType::Fragment, "shaders/fragment_shaders/skybox_frag.glsl" } 
@@ -339,11 +339,12 @@ void DefaultSceneLayer::_CreateScene()
 		// Create an empty scene
 		Scene::Sptr scene = std::make_shared<Scene>();  
 
+		//Skybox in Maitnence
 		// Setting up our enviroment map
-		scene->SetSkyboxTexture(testCubemap); 
-		scene->SetSkyboxShader(skyboxShader);
+		//scene->SetSkyboxTexture(SkyCubemap);
+		//scene->SetSkyboxShader(skyboxShader);
 		// Since the skybox I used was for Y-up, we need to rotate it 90 deg around the X-axis to convert it to z-up 
-		scene->SetSkyboxRotation(glm::rotate(MAT4_IDENTITY, glm::half_pi<float>(), glm::vec3(1.0f, 0.0f, 0.0f)));
+		//scene->SetSkyboxRotation(glm::rotate(MAT4_IDENTITY, glm::half_pi<float>(), glm::vec3(1.0f, 0.0f, 0.0f)));
 
 		// Loading in a color lookup table
 		Texture3D::Sptr lutCool = ResourceManager::CreateAsset<Texture3D>("luts/LUT_Cool.CUBE");
@@ -403,7 +404,7 @@ void DefaultSceneLayer::_CreateScene()
 			swordMat->Set("u_Custom.isOn", false);
 			swordMat->Set("toggleColorCorrect", true);
 			swordMat->Set("emissiveMap", swordTex_EMap);
-			swordMat->Set("emissiveColor", glm::vec3(0.0f, 0.0f, 1.0f));
+			swordMat->Set("emissiveColor", glm::vec3(0.0f, 1.0f, 1.0f));
 			swordMat->Set("emissiveIntensity", 1.0f);
 
 			swordMat->Set("texColor", swordTex);
@@ -543,45 +544,6 @@ void DefaultSceneLayer::_CreateScene()
 			// Make sure that the camera is set as the scene's main camera!
 			//scene->MainCamera = cam;
 		}
-		
-		// Set up all our sample objects
-		/*GameObject::Sptr plane = scene->CreateGameObject("Plane");
-		{
-			// Make a big tiled mesh
-			MeshResource::Sptr tiledMesh = ResourceManager::CreateAsset<MeshResource>();
-			tiledMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(100.0f), glm::vec2(20.0f)));
-			tiledMesh->GenerateMesh();
-
-			// Create and attach a RenderComponent to the object to draw our mesh
-			RenderComponent::Sptr renderer = plane->Add<RenderComponent>();
-			renderer->SetMesh(tiledMesh);
-			renderer->SetMaterial(boxMaterial);
-
-			// Attach a plane collider that extends infinitely along the X/Y axis
-			RigidBody::Sptr physics = plane->Add<RigidBody>(static by default);
-			physics->AddCollider(BoxCollider::Create(glm::vec3(50.0f, 50.0f, 1.0f)))->SetPosition({ 0,0,-1 });
-		}*/
-
-		/*GameObject::Sptr monkey1 = scene->CreateGameObject("Monkey 1");
-		{
-			// Set position in the scene
-			monkey1->SetPostion(glm::vec3(1.5f, 0.0f, 1.0f));
-
-			// Add some behaviour that relies on the physics body
-			monkey1->Add<JumpBehaviour>();
-
-			// Create and attach a renderer for the monkey
-			RenderComponent::Sptr renderer = monkey1->Add<RenderComponent>();
-			renderer->SetMesh(monkeyMesh);
-			renderer->SetMaterial(monkeyMaterial);
-
-			// Example of a trigger that interacts with static and kinematic bodies as well as dynamic bodies
-			TriggerVolume::Sptr trigger = monkey1->Add<TriggerVolume>();
-			trigger->SetFlags(TriggerTypeFlags::Statics | TriggerTypeFlags::Kinematics);
-			trigger->AddCollider(BoxCollider::Create(glm::vec3(1.0f)));
-
-			monkey1->Add<TriggerVolumeEnterBehaviour>();
-		}*/
 
 		GameObject::Sptr world = scene->CreateGameObject("World");
 		{
@@ -619,37 +581,6 @@ void DefaultSceneLayer::_CreateScene()
 		}
 
 		GameObject::Sptr demoBase = scene->CreateGameObject("Demo Parent");
-		// Box to showcase the specular material
-		/*GameObject::Sptr specBox = scene->CreateGameObject("Specular Object");
-		{
-			MeshResource::Sptr boxMesh = ResourceManager::CreateAsset<MeshResource>();
-			boxMesh->AddParam(MeshBuilderParam::CreateCube(ZERO, ONE));
-			boxMesh->GenerateMesh();
-
-			// Set and rotation position in the scene
-			specBox->SetPostion(glm::vec3(0, -4.0f, 1.0f));
-
-			// Add a render component
-			RenderComponent::Sptr renderer = specBox->Add<RenderComponent>();
-			renderer->SetMesh(boxMesh);
-			renderer->SetMaterial(testMaterial); 
-
-			demoBase->AddChild(specBox);
-		}
-
-		// sphere to showcase the foliage material
-		GameObject::Sptr foliageBall = scene->CreateGameObject("Foliage Sphere");
-		{
-			// Set and rotation position in the scene
-			foliageBall->SetPostion(glm::vec3(-4.0f, -4.0f, 1.0f));
-
-			// Add a render component
-			RenderComponent::Sptr renderer = foliageBall->Add<RenderComponent>();
-			renderer->SetMesh(sphere);
-			renderer->SetMaterial(foliageMaterial);
-
-			demoBase->AddChild(foliageBall);
-		}*/
 
 		// Create a trigger volume for testing how we can detect collisions with objects!
 		GameObject::Sptr trigger = scene->CreateGameObject("Trigger");
@@ -661,8 +592,6 @@ void DefaultSceneLayer::_CreateScene()
 
 			trigger->Add<TriggerVolumeEnterBehaviour>();
 		}
-
-		//Lightbird
 		
 		/////////////////////////// UI //////////////////////////////
 		/*

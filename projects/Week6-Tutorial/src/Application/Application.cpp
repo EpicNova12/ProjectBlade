@@ -194,6 +194,7 @@ void Application::_Run()
 	//---------------------------------------------------------------------
 	glm::vec3 swordRot(90.0f, 0.0f, -180.0f);
 	glm::vec3 ballRot(0.0f, 0.0f, 0.0f);
+	int score = 0;
 
 	bool vAttack = false;
 	bool hAttack = false;
@@ -284,6 +285,8 @@ void Application::_Run()
 			if (ballType == 1)
 			{
 				ballType = ballType + 1;
+				score = score + 1;
+				std::cout << score << '\n';
 			}
 		}
 		if (vAttack == true)
@@ -313,6 +316,8 @@ void Application::_Run()
 			if (ballType == 2)
 			{
 				ballType = ballType + 1;
+				score = score + 1;
+				std::cout << score << '\n';
 			}
 		}
 		if (hAttack == true)
@@ -328,6 +333,8 @@ void Application::_Run()
 				hAttack = false;
 			}
 		}
+		//Diagonal Attacks Closed fot Maitnence
+		/*
 		//Diagonoal Attack 1
 		if ((InputEngine::IsKeyDown(GLFW_KEY_UP) && InputEngine::IsKeyDown(GLFW_KEY_RIGHT) || (InputEngine::IsKeyDown(GLFW_KEY_DOWN) && InputEngine::IsKeyDown(GLFW_KEY_LEFT))))
 		{
@@ -385,8 +392,8 @@ void Application::_Run()
 				swordRot = glm::vec3(90.0f, 0.0f, -180.0);
 				vAttack = false;
 			}
-		}
-		if (ballType >= 5)
+		}*/
+		if (ballType >= 3)
 		{
 			ballType = 1;
 		}
