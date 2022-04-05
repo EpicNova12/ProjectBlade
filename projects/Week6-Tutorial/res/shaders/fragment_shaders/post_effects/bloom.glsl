@@ -25,3 +25,5 @@ void main() {
     frag_out = accumulator.rgb + texture(s_Image,inUV).rgb;
     outColor = frag_out;
 }
+
+//Code is based on the 5x5 Box Filter code from the tutorials

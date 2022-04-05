@@ -44,6 +44,7 @@ uniform sampler2D texColor;
 uniform sampler2D emissiveMap;
 uniform vec3 emissiveColor;
 uniform float emissiveIntensity;
+uniform bool emissiveIsOn;
 uniform bool toggleColorCorrect;
 
 uniform AmbientLight u_ALight;
@@ -94,9 +95,11 @@ void main()
 
 		float value = step(u_Custom.rim,difference)*(difference-u_Custom.rim)/u_Custom.rim;
 		//Emissive
-		emissive = texture(emissiveMap, inUV);
-		emissive = vec4(emissive.rgb * emissiveColor * emissiveIntensity,1.0f);
-
+		if(emissiveIsOn==true)
+		{
+			emissive = texture(emissiveMap, inUV);
+			emissive = vec4(emissive.rgb * emissiveColor * emissiveIntensity,1.0f);
+		}
 		vec3 result = vec3(textureColor.rgb *(getAmbientLight(u_ALight) + getDiffuseLightColor(u_DLight,vertNormal) + specular));
 
 		if(u_Custom.isOn==true)

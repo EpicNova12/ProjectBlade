@@ -6,6 +6,8 @@
 
 #include <GLM/glm.hpp>
 
+//Code is based on the 5x5 Box Filter code from the tutorials
+
 Bloom::Bloom() :
 	PostProcessingLayer::Effect()
 {

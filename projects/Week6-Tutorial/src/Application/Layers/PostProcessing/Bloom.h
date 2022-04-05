@@ -4,6 +4,8 @@
 #include "Graphics/Textures/Texture3D.h"
 #include "Graphics/Framebuffer.h"
 
+//Code is based on the 5x5 Box Filter code from the tutorials
+
 class Bloom : public PostProcessingLayer::Effect {
 public:
 	MAKE_PTRS(Bloom);

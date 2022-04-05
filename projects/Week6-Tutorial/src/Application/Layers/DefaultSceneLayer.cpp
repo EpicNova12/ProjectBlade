@@ -89,6 +89,7 @@ void toggleAmbient(bool isOn);
 void toggleDiffuse(bool isOn);
 void toggleSpecular(bool isOn);
 void toggleCustom(bool isOn);
+void toggleEmissive(bool isOn);
 
 void DefaultSceneLayer::OnUpdate()
 {
@@ -98,6 +99,7 @@ void DefaultSceneLayer::OnUpdate()
 		toggleDiffuse(false);
 		toggleSpecular(false);
 		toggleCustom(false);
+		toggleEmissive(false);
 		for (int i = 0; i < materials.size(); i++)
 		{
 			updateMaterial(materials[i]);
@@ -109,6 +111,7 @@ void DefaultSceneLayer::OnUpdate()
 		toggleDiffuse(false);
 		toggleSpecular(false);
 		toggleCustom(false);
+		toggleEmissive(false);
 		for (int i = 0; i < materials.size(); i++)
 		{
 			updateMaterial(materials[i]);
@@ -120,6 +123,7 @@ void DefaultSceneLayer::OnUpdate()
 		toggleDiffuse(false);
 		toggleSpecular(true);
 		toggleCustom(false);
+		toggleEmissive(false);
 		for (int i = 0; i < materials.size(); i++)
 		{
 			updateMaterial(materials[i]);
@@ -131,6 +135,7 @@ void DefaultSceneLayer::OnUpdate()
 		toggleDiffuse(false);
 		toggleSpecular(true);
 		toggleCustom(false);
+		toggleEmissive(false);
 		for (int i = 0; i < materials.size(); i++)
 		{
 			updateMaterial(materials[i]);
@@ -141,7 +146,8 @@ void DefaultSceneLayer::OnUpdate()
 		toggleAmbient(true);
 		toggleDiffuse(false);
 		toggleSpecular(true);
-		toggleCustom(true);
+		toggleCustom(false);
+		toggleEmissive(true);
 		for (int i = 0; i < materials.size(); i++)
 		{
 			updateMaterial(materials[i]);
@@ -153,6 +159,7 @@ void DefaultSceneLayer::OnUpdate()
 		toggleDiffuse(true);
 		toggleSpecular(true);
 		toggleCustom(false);
+		toggleEmissive(true);
 		for (int i = 0; i < materials.size(); i++)
 		{
 			updateMaterial(materials[i]);
@@ -164,6 +171,7 @@ void DefaultSceneLayer::OnUpdate()
 		toggleDiffuse(true);
 		toggleSpecular(true);
 		toggleCustom(true);
+		toggleEmissive(true);
 		for (int i = 0; i < materials.size(); i++)
 		{
 			updateMaterial(materials[i]);
@@ -178,6 +186,7 @@ bool ambientIsOn = true;
 bool diffuseIsOn = true;
 bool specularIsOn = true;
 bool customIsOn = false;
+bool emissiveIsOn = true;
 
 void toggleAmbient(bool isOn)
 {
@@ -196,13 +205,19 @@ void toggleCustom(bool isOn)
 	customIsOn = isOn;
 }
 
+void toggleEmissive(bool isOn)
+{
+	emissiveIsOn = isOn;
+}
+
+
 void updateMaterial(Gameplay::Material::Sptr material)
 {
 	material->Set("u_ALight.isOn", ambientIsOn);
 	material->Set("u_DLight.isOn", diffuseIsOn);
 	material->Set("u_SLight.isOn", specularIsOn);
 	material->Set("u_Custom.isOn", customIsOn);
-
+	material->Set("emissiveIsOn", emissiveIsOn);
 }
 void updateLUT(Gameplay::Scene::Sptr scene)
 {
@@ -383,6 +398,7 @@ void DefaultSceneLayer::_CreateScene()
 			worldMat->Set("emissiveMap", worldTex_EMap);
 			worldMat->Set("emissiveColor", glm::vec3(0.0f, 1.0f, 0.0f));
 			worldMat->Set("emissiveIntensity", 1.0f);
+			worldMat->Set("emissiveIsOn", true);
 
 			worldMat->Set("texColor", worldTex);
 		}
@@ -406,6 +422,7 @@ void DefaultSceneLayer::_CreateScene()
 			swordMat->Set("emissiveMap", swordTex_EMap);
 			swordMat->Set("emissiveColor", glm::vec3(0.0f, 1.0f, 1.0f));
 			swordMat->Set("emissiveIntensity", 1.0f);
+			swordMat->Set("emissiveIsOn", true);
 
 			swordMat->Set("texColor", swordTex);
 		}
@@ -430,6 +447,7 @@ void DefaultSceneLayer::_CreateScene()
 			ballMat->Set("emissiveMap", ballTex_EMap);
 			ballMat->Set("emissiveColor", glm::vec3(1.0f,0.0f,0.0f));
 			ballMat->Set("emissiveIntensity", 1.0f);
+			ballMat->Set("emissiveIsOn", true);
 
 			ballMat->Set("texColor", ballTex);
 
