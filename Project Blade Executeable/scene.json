@@ -1,0 +1,356 @@
+{
+	"ambient": {
+		"x": 0.10000000149011612,
+		"y": 0.10000000149011612,
+		"z": 0.10000000149011612
+	},
+	"default_material": "null",
+	"main_camera": "9bc57b6b-8887-9d4d-9ebf-ea86941c1568",
+	"objects": [
+		{
+			"children": [],
+			"components": {
+				"Gameplay::Camera": {
+					"clear_color": {
+						"w": -431602080.0,
+						"x": -431602080.0,
+						"y": -431602080.0,
+						"z": -431602080.0
+					},
+					"enabled": true,
+					"far_plane": 1000.0,
+					"fov_radians": 1.5707963705062866,
+					"guid": "9bc57b6b-8887-9d4d-9ebf-ea86941c1568",
+					"near_plane": 0.10000000149011612,
+					"ortho_enabled": false,
+					"ortho_size": 10.0
+				},
+				"SimpleCameraControl": {
+					"enabled": true,
+					"guid": "f15dd4f3-7fd1-0740-bf94-30f7400188ea",
+					"mouse_sensitivity": {
+						"x": 0.5,
+						"y": 0.30000001192092896
+					},
+					"move_speed": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"shift_mult": 2.0
+				}
+			},
+			"guid": "b14e6a15-5bb5-c547-a840-3abda668ead7",
+			"hide_in_inspector": false,
+			"name": "Main Camera",
+			"parent": "null",
+			"position": {
+				"x": -7.275000095367432,
+				"y": 0.2669999897480011,
+				"z": 5.26200008392334
+			},
+			"rotation": {
+				"w": 0.49949246644973755,
+				"x": 0.48183926939964294,
+				"y": -0.4998476803302765,
+				"z": -0.5181606411933899
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": null,
+			"guid": "670fa934-73df-a747-8210-b0ff65760e95",
+			"hide_in_inspector": false,
+			"name": "Lights",
+			"parent": "null",
+			"position": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"rotation": {
+				"w": 1.0,
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"Light": {
+					"color": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"direction": {
+						"x": 0.0,
+						"y": 0.0,
+						"z": -1.0
+					},
+					"enabled": true,
+					"guid": "22d65fac-b9b4-764f-9bca-fcb2e72375ff",
+					"intensity": 18.0,
+					"params": {
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"range": 20.0,
+					"type": "Point"
+				}
+			},
+			"guid": "d102f005-42e3-874a-a6a0-f03766908bf1",
+			"hide_in_inspector": false,
+			"name": "Light",
+			"parent": "null",
+			"position": {
+				"x": -17.100000381469727,
+				"y": 0.0,
+				"z": -3.799999952316284
+			},
+			"rotation": {
+				"w": 1.0,
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"RenderComponent": {
+					"enabled": true,
+					"guid": "3f4d13c8-a58c-f54f-8c00-9cd81e87f053",
+					"material": "f0528a82-bb35-1643-bf5b-cdccd249c019",
+					"mesh": "0a324b9a-d0b4-624f-b652-81fc14fa976d"
+				}
+			},
+			"guid": "d78a91d0-1d22-4345-aa58-b6166461b8ec",
+			"hide_in_inspector": false,
+			"name": "World",
+			"parent": "null",
+			"position": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"rotation": {
+				"w": -3.0908619663705394e-08,
+				"x": -3.0908619663705394e-08,
+				"y": 0.7071067690849304,
+				"z": 0.7071067690849304
+			},
+			"scale": {
+				"x": 0.800000011920929,
+				"y": 0.800000011920929,
+				"z": 0.800000011920929
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"RenderComponent": {
+					"enabled": true,
+					"guid": "b4d8a153-827c-5240-9cb5-c1a0b1babb69",
+					"material": "dc094413-d316-8a40-bec1-443627e0c813",
+					"mesh": "50dd8d71-f6ee-a94c-b8f8-5f618ea8ebe0"
+				}
+			},
+			"guid": "4557868e-9240-784c-8cd2-d8360e9bf5cc",
+			"hide_in_inspector": false,
+			"name": "Sword",
+			"parent": "null",
+			"position": {
+				"x": -3.049999952316284,
+				"y": -2.75,
+				"z": 2.8299999237060547
+			},
+			"rotation": {
+				"w": -3.0908619663705394e-08,
+				"x": -3.0908619663705394e-08,
+				"y": -0.7071067690849304,
+				"z": -0.7071067690849304
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"RenderComponent": {
+					"enabled": true,
+					"guid": "38c6b5db-5559-784d-bc9d-06c40dc0dc39",
+					"material": "2c5dff49-95ee-ae4f-ac94-ce12b59e5bbd",
+					"mesh": "e65034a0-c231-4b48-9d5f-3bbba879131e"
+				}
+			},
+			"guid": "97be303d-e9e6-9b42-b7f7-d07adeab0a74",
+			"hide_in_inspector": false,
+			"name": "Ball",
+			"parent": "null",
+			"position": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 5.0
+			},
+			"rotation": {
+				"w": 0.7071067690849304,
+				"x": 0.7071067690849304,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"RenderComponent": {
+					"enabled": true,
+					"guid": "32924cbe-f429-fe40-9a76-a12dc3500b1c",
+					"material": "9cd9c1e3-bdaa-9c40-ad7f-86f348e24008",
+					"mesh": "a690779b-9d3a-a64a-ba1b-e5653164dc81"
+				}
+			},
+			"guid": "4c0a196f-403d-5744-86ac-16ddf27d1b64",
+			"hide_in_inspector": false,
+			"name": "Pipe",
+			"parent": "null",
+			"position": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 1.1799999475479126
+			},
+			"rotation": {
+				"w": 0.4911976456642151,
+				"x": 0.4911976456642151,
+				"y": -0.508650004863739,
+				"z": -0.508650004863739
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": null,
+			"guid": "3343dd56-2186-8944-b35e-ed7a3e5d8a18",
+			"hide_in_inspector": false,
+			"name": "Demo Parent",
+			"parent": "null",
+			"position": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"rotation": {
+				"w": 1.0,
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		},
+		{
+			"children": [],
+			"components": {
+				"Gameplay::Physics::TriggerVolume": {
+					"colliders": [
+						{
+							"guid": "6ee6b5a4-4a95-c34c-8977-52fd62ff017d",
+							"half_extents": {
+								"x": 3.0,
+								"y": 3.0,
+								"z": 1.0
+							},
+							"position": {
+								"x": 0.0,
+								"y": 0.0,
+								"z": 0.5
+							},
+							"rotation": {
+								"x": 0.0,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"type": "Cylinder"
+						}
+					],
+					"enabled": true,
+					"group": 1,
+					"guid": "776f05d3-734b-544e-aafc-f3d475fc8c0a",
+					"mask": -1
+				},
+				"TriggerVolumeEnterBehaviour": {
+					"enabled": true,
+					"guid": "0a608373-a4cc-364c-af88-ad2dc561daa8"
+				}
+			},
+			"guid": "92f88bc7-8cc9-9245-8199-abf96df9d036",
+			"hide_in_inspector": false,
+			"name": "Trigger",
+			"parent": "null",
+			"position": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"rotation": {
+				"w": 1.0,
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		}
+	],
+	"skybox": {
+		"mesh": "null",
+		"orientation": {
+			"w": 1.0,
+			"x": 0.0,
+			"y": 0.0,
+			"z": 0.0
+		},
+		"shader": "null",
+		"texture": "null"
+	}
+}
