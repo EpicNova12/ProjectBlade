@@ -43,8 +43,6 @@ void InspectorWindow::Render()
 		glm::vec3 euler = selection->GetRotationEuler();
 		ImGuiStorage* guiStore = ImGui::GetStateStorage();
 
-		//Debug
-		
 		// Extract the angles from the storage, note that we're only using the address of the position for unique IDs
 		euler.x = guiStore->GetFloat(ImGui::GetID(&selection->_position.x), euler.x);
 		euler.y = guiStore->GetFloat(ImGui::GetID(&selection->_position.y), euler.y);

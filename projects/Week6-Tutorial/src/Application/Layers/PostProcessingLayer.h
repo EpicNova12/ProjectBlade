@@ -67,7 +67,7 @@ public:
 		glm::vec2 _outputScale = glm::vec2(1);
 		// The render target format for the effect's buffer
 		RenderTargetType _format = RenderTargetType::ColorRgba8;
-
+		
 		Effect() = default;
 	};
 

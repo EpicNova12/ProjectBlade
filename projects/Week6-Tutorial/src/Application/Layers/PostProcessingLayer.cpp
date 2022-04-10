@@ -29,11 +29,10 @@ void PostProcessingLayer::AddEffect(const Effect::Sptr& effect) {
 void PostProcessingLayer::OnAppLoad(const nlohmann::json& config)
 {
 	// Loads some effects in
-	//_effects.push_back(std::make_shared<ColorCorrectionEffect>());
-	//_effects.push_back(std::make_shared<BoxFilter3x3>());
-	//_effects.push_back(std::make_shared<BoxFilter5x5>());
+	_effects.push_back(std::make_shared<ColorCorrectionEffect>());
 	_effects.push_back(std::make_shared<Bloom>());
-	//_effects.push_back(std::make_shared<OutlineEffect>());
+
+	//GetEffect<OutlineEffect>()->Enabled = false;
 
 	Application& app = Application::Get();
 	const glm::uvec4& viewport = app.GetPrimaryViewport();
@@ -83,7 +82,7 @@ void PostProcessingLayer::OnPostRender()
 
 	// Bind the quad VAO so our effects can use it
 	_quadVAO->Bind();
-	
+
 	// Iterate over all the effects in the queue
 	for (const auto& effect : _effects) {
 		// Only render if it's enabled
@@ -121,7 +120,15 @@ void PostProcessingLayer::OnPostRender()
 		MagFilter::Linear
 	);
 
-	current->Unbind();
+	gBuffer->Bind(FramebufferBinding::Read);
+	current->Blit(
+		{ 0, 0, gBuffer->GetWidth(), gBuffer->GetHeight() },
+		{ viewport.x, viewport.y, viewport.x + viewport.z, viewport.y + viewport.w },
+		BufferFlags::Depth,
+		MagFilter::Nearest
+	);
+
+	gBuffer->Unbind();
 }
 
 void PostProcessingLayer::OnSceneLoad()

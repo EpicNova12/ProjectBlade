@@ -20,6 +20,7 @@
 #include "Graphics/ShaderProgram.h"
 #include "Graphics/Textures/Texture1D.h"
 #include "Graphics/Textures/Texture2D.h"
+#include "Graphics/Textures/Texture2DArray.h"
 #include "Graphics/Textures/Texture3D.h"
 #include "Graphics/Textures/TextureCube.h"
 #include "Graphics/VertexTypes.h"
@@ -27,7 +28,7 @@
 #include "Graphics/GuiBatcher.h"
 #include "Graphics/Framebuffer.h"
 
-//Gameplay
+// Gameplay
 #include "Gameplay/Material.h"
 #include "Gameplay/GameObject.h"
 #include "Gameplay/Scene.h"
@@ -43,6 +44,7 @@
 #include "Gameplay/Components/SimpleCameraControl.h"
 #include "Gameplay/Components/ParticleSystem.h"
 #include "Gameplay/Components/Light.h"
+#include "Gameplay/Components/ShadowCamera.h"
 
 // GUI
 #include "Gameplay/Components/GUI/RectTransform.h"
@@ -59,6 +61,7 @@
 #include "Layers/InstancedRenderingTestLayer.h"
 #include "Layers/ParticleLayer.h"
 #include "Layers/PostProcessingLayer.h"
+
 
 Application* Application::_singleton = nullptr;
 std::string Application::_applicationName = "INFR-2350U - DEMO";

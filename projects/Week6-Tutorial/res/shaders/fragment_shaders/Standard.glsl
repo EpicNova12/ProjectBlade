@@ -41,6 +41,7 @@ struct CustomShader
 
 //Uniforms
 uniform sampler2D texColor;
+uniform bool texIsOn;
 uniform sampler2D emissiveMap;
 uniform vec3 emissiveColor;
 uniform float emissiveIntensity;
@@ -100,9 +101,14 @@ void main()
 			emissive = texture(emissiveMap, inUV);
 			emissive = vec4(emissive.rgb * emissiveColor * emissiveIntensity,1.0f);
 		}
-		vec3 result = vec3(textureColor.rgb *(getAmbientLight(u_ALight) + getDiffuseLightColor(u_DLight,vertNormal) + specular));
 
-		if(u_Custom.isOn==true)
+		vec3 result = vec3(1.0,1.0,1.0);
+
+		if (texIsOn==true)
+		{
+			result = vec3(textureColor.rgb *(getAmbientLight(u_ALight) + getDiffuseLightColor(u_DLight,vertNormal) + specular));
+		}
+		if(u_Custom.isOn==true && texIsOn == true)
 		{
 			result = vec3(textureColor.rgb *(getAmbientLight(u_ALight) + getDiffuseLightColor(u_DLight,vertNormal) + specular + (value*u_Custom.rimColor)));
 		}

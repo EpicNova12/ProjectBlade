@@ -17,6 +17,7 @@
 #include "Graphics/ShaderProgram.h"
 #include "Graphics/Textures/Texture2D.h"
 #include "Graphics/Textures/TextureCube.h"
+#include "Graphics/Textures/Texture2DArray.h"
 #include "Graphics/VertexTypes.h"
 #include "Graphics/Font.h"
 #include "Graphics/GuiBatcher.h"
@@ -69,6 +70,9 @@
 #include "Gameplay/Components/ParticleSystem.h"
 #include "Graphics/Textures/Texture3D.h"
 #include "Graphics/Textures/Texture1D.h"
+#include "Application/Layers/ImGuiDebugLayer.h"
+#include "Application/Windows/DebugWindow.h"
+#include "Gameplay/Components/ShadowCamera.h"
 
 DefaultSceneLayer::DefaultSceneLayer() :
 	ApplicationLayer()
@@ -90,6 +94,7 @@ void toggleDiffuse(bool isOn);
 void toggleSpecular(bool isOn);
 void toggleCustom(bool isOn);
 void toggleEmissive(bool isOn);
+void toggleTexture(bool isOn);
 
 void DefaultSceneLayer::OnUpdate()
 {
@@ -177,6 +182,36 @@ void DefaultSceneLayer::OnUpdate()
 			updateMaterial(materials[i]);
 		}
 	}
+	if (InputEngine::IsKeyDown(GLFW_KEY_T))
+	{
+		toggleAmbient(true);
+		toggleDiffuse(true);
+		toggleSpecular(true);
+		toggleCustom(false);
+		toggleEmissive(false);
+		toggleTexture(false);
+		for (int i = 0; i < materials.size(); i++)
+		{
+			updateMaterial(materials[i]);
+		}
+	}
+	if (InputEngine::IsKeyDown(GLFW_KEY_Y))
+	{
+		toggleAmbient(true);
+		toggleDiffuse(true);
+		toggleSpecular(true);
+		toggleCustom(false);
+		toggleEmissive(true);
+		toggleTexture(true);
+		for (int i = 0; i < materials.size(); i++)
+		{
+			updateMaterial(materials[i]);
+		}
+	}
+	if (InputEngine::IsKeyDown(GLFW_KEY_R))
+	{
+
+	}
 }
 
 
@@ -187,6 +222,7 @@ bool diffuseIsOn = true;
 bool specularIsOn = true;
 bool customIsOn = false;
 bool emissiveIsOn = true;
+bool textureIsOn = true;
 
 void toggleAmbient(bool isOn)
 {
@@ -210,6 +246,12 @@ void toggleEmissive(bool isOn)
 	emissiveIsOn = isOn;
 }
 
+void toggleTexture(bool isOn)
+{
+	textureIsOn = isOn;
+}
+
+
 
 void updateMaterial(Gameplay::Material::Sptr material)
 {
@@ -218,6 +260,7 @@ void updateMaterial(Gameplay::Material::Sptr material)
 	material->Set("u_SLight.isOn", specularIsOn);
 	material->Set("u_Custom.isOn", customIsOn);
 	material->Set("emissiveIsOn", emissiveIsOn);
+	material->Set("texIsOn", textureIsOn);
 }
 void updateLUT(Gameplay::Scene::Sptr scene)
 {
@@ -401,6 +444,7 @@ void DefaultSceneLayer::_CreateScene()
 			worldMat->Set("emissiveIsOn", true);
 
 			worldMat->Set("texColor", worldTex);
+			worldMat->Set("texIsOn", textureIsOn);
 		}
 		materials.push_back(worldMat);
 		Material::Sptr swordMat = ResourceManager::CreateAsset<Material>(StandardShader);
@@ -425,6 +469,7 @@ void DefaultSceneLayer::_CreateScene()
 			swordMat->Set("emissiveIsOn", true);
 
 			swordMat->Set("texColor", swordTex);
+			swordMat->Set("texIsOn", textureIsOn);
 		}
 		materials.push_back(swordMat);
 		
@@ -450,6 +495,7 @@ void DefaultSceneLayer::_CreateScene()
 			ballMat->Set("emissiveIsOn", true);
 
 			ballMat->Set("texColor", ballTex);
+			ballMat->Set("texIsOn", textureIsOn);
 
 		}
 		materials.push_back(ballMat);
@@ -477,7 +523,9 @@ void DefaultSceneLayer::_CreateScene()
 			pipeMat->Set("u_Custom.rim", 0.7f);
 			pipeMat->Set("u_Custom.isOn", false);
 			pipeMat->Set("toggleColorCorrect", false);
+
 			pipeMat->Set("texColor", pipeTex);
+			pipeMat->Set("texIsOn", textureIsOn);
 		}
 		materials.push_back(pipeMat);
 
@@ -485,20 +533,7 @@ void DefaultSceneLayer::_CreateScene()
 		
 		// This will be the reflective material, we'll make the whole thing 50% reflective
 		
-		Material::Sptr displacementTest = ResourceManager::CreateAsset<Material>(displacementShader);
-		{
-			Texture2D::Sptr displacementMap = ResourceManager::CreateAsset<Texture2D>("textures/displacement_map.png");
-			Texture2D::Sptr normalMap       = ResourceManager::CreateAsset<Texture2D>("textures/normal_map.png");
-			Texture2D::Sptr diffuseMap      = ResourceManager::CreateAsset<Texture2D>("textures/bricks_diffuse.png");
-
-			displacementTest->Name = "Displacement Map";
-			displacementTest->Set("u_Material.AlbedoMap", diffuseMap);
-			displacementTest->Set("u_Material.NormalMap", normalMap);
-			displacementTest->Set("s_Heightmap", displacementMap);
-			displacementTest->Set("u_Material.Shininess", 0.5f);
-			displacementTest->Set("u_Scale", 0.1f);
-		}
-
+		
 		Material::Sptr normalmapMat = ResourceManager::CreateAsset<Material>(deferredForward);
 		{
 			Texture2D::Sptr normalMap       = ResourceManager::CreateAsset<Texture2D>("textures/normal_map.png");
@@ -511,27 +546,14 @@ void DefaultSceneLayer::_CreateScene()
 			normalmapMat->Set("u_Scale", 0.1f);
 		}
 
-		Material::Sptr multiTextureMat = ResourceManager::CreateAsset<Material>(multiTextureShader);
-		{
-			Texture2D::Sptr sand  = ResourceManager::CreateAsset<Texture2D>("textures/terrain/sand.png");
-			Texture2D::Sptr grass = ResourceManager::CreateAsset<Texture2D>("textures/terrain/grass.png");
-
-			multiTextureMat->Name = "Multitexturing";
-			multiTextureMat->Set("u_Material.DiffuseA", sand);
-			multiTextureMat->Set("u_Material.DiffuseB", grass);
-			multiTextureMat->Set("u_Material.NormalMapA", normalMapDefault);
-			multiTextureMat->Set("u_Material.NormalMapB", normalMapDefault);
-			multiTextureMat->Set("u_Material.Shininess", 0.5f);
-			multiTextureMat->Set("u_Scale", 0.1f); 
-		}
-
 		// Create some lights for our scene
 		GameObject::Sptr lightParent = scene->CreateGameObject("Lights");
 
 		for (int ix = 0; ix < 1; ix++) {
 			//light->SetPostion(glm::vec3(glm::diskRand(25.0f), 1.0f));
 			GameObject::Sptr light = scene->CreateGameObject("Light");
-			light->SetPostion(glm::vec3(-17.1, 0.0, -3.8));
+			//Old Pos: light->SetPostion(glm::vec3(-17.1, 0.0, -3.8));
+			light->SetPostion(glm::vec3(30.0, 0.0, 30.0));
 			//lightParent->AddChild(light);
 
 			Light::Sptr lightComponent = light->Add<Light>();

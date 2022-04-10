@@ -38,14 +38,12 @@ void GBufferPreviews::Render()
 	ImVec2 size = ImVec2(width, height);
 
 	ImGui::Columns(2);
-	/*ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 	ImGui::BeginChildFrame(ImGui::GetID(depth.get()), ImVec2(size.x, size.y + ImGui::GetTextLineHeight() + 10));
 	ImGuiHelper::DrawLinearDepthTexture(depth, glm::vec2(size.x, size.y), 0.01f, 1000.0f);
 	ImGui::Text("depth");
 	ImGui::EndChildFrame();
 	ImGui::PopStyleVar();
-	ImGui::NextColumn();*/
-	_RenderTexture2D(depth, size, "depth");
 	ImGui::NextColumn();
 
 	_RenderTexture2D(color, size, "color");
