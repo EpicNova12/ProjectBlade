@@ -73,8 +73,8 @@ Application::Application() :
 	_window(nullptr),
 	_windowSize({ DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT }),
 	_isRunning(false),
-	_isEditor(true),
-	_windowTitle("INFR - 2350U"),
+	_isEditor(false),
+	_windowTitle("Project Blade"),
 	_currentScene(nullptr),
 	_targetScene(nullptr)
 { }
@@ -195,7 +195,7 @@ void Application::_Run()
 	//Materials
 	//Variables
 	//---------------------------------------------------------------------
-	glm::vec3 swordRot(90.0f, 0.0f, -180.0f);
+	glm::vec3 swordRot(0.0f, 0.0f, 0.0f);
 	glm::vec3 ballRot(0.0f, 0.0f, 0.0f);
 	int score = 0;
 
@@ -296,12 +296,12 @@ void Application::_Run()
 		{
 			sword->SetPostion(glm::vec3(-3.05f, 0.0f, 2.83f));
 			sword->SetRotation(swordRot);
-			swordRot = glm::vec3(90.0f, swordRot.y - 3.5f, -180.0f);
-			if (swordRot.y <= -142.0f)
+			swordRot = glm::vec3(0.0f, swordRot.y + 3.5f, 0.0f);
+			if (swordRot.y >= 142.0f)
 			{
 				sword->SetPostion(glm::vec3(-3.05f, -2.75f, 2.83f));
-				sword->SetRotation(glm::vec3(90.0f, 0.0f, -180.0f));
-				swordRot = glm::vec3(90.0f, 0.0f, -180.0);
+				sword->SetRotation(glm::vec3(0.0f, 0.0f, 0.0f));
+				swordRot = glm::vec3(0.0f, 0.0f, 0.0f);
 				vAttack = false;
 			}
 		}
@@ -310,7 +310,7 @@ void Application::_Run()
 		{
 			if (hAttack == false)
 			{
-				swordRot = glm::vec3(0.0f, 0.0f, 0.0f);
+				swordRot = glm::vec3(90.0f, 0.0f, 170.0f);
 			}
 			hAttack = true;
 			vAttack = false;
@@ -325,14 +325,14 @@ void Application::_Run()
 		}
 		if (hAttack == true)
 		{
-			sword->SetPostion(glm::vec3(-3.05f, 0.0f, 4.5f));
+			sword->SetPostion(glm::vec3(-3.65f, 0.0f, 4.0f));
 			sword->SetRotation(swordRot);
-			swordRot = glm::vec3(0.0f, 0.0f, swordRot.z - 3.5f);
-			if (swordRot.z <= -180.0f)
+			swordRot = glm::vec3(90.0f, 0.0f, swordRot.z - 3.5f);
+			if (swordRot.z <= 10.0f)
 			{
 				sword->SetPostion(glm::vec3(-3.05f, -2.75f, 2.83f));
-				sword->SetRotation(glm::vec3(90.0f, 0.0f, -180.0f));
-				swordRot = glm::vec3(90.0f, 0.0f, -180.0);
+				sword->SetRotation(glm::vec3(0.0f, 0.0f, 0.0f));
+				swordRot = glm::vec3(0.0f, 0.0f, 0.0f);
 				hAttack = false;
 			}
 		}

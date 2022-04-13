@@ -339,9 +339,7 @@ void DefaultSceneLayer::_CreateScene()
 		MeshResource::Sptr worldMesh = ResourceManager::CreateAsset<MeshResource>("World.obj");
 		MeshResource::Sptr swordMesh = ResourceManager::CreateAsset<MeshResource>("Sword.obj");
 		MeshResource::Sptr ballMesh = ResourceManager::CreateAsset<MeshResource>("SliceBall.obj");
-		MeshResource::Sptr pipeMesh = ResourceManager::CreateAsset<MeshResource>("Pipe.obj");
-		MeshResource::Sptr birdMesh = ResourceManager::CreateAsset<MeshResource>("bird.obj");
-
+		MeshResource::Sptr pipeMesh = ResourceManager::CreateAsset<MeshResource>("Pipe.obj");		
 		// Load in some textures
 		Texture2D::Sptr    boxTexture   = ResourceManager::CreateAsset<Texture2D>("textures/box-diffuse.png");
 		Texture2D::Sptr    boxSpec      = ResourceManager::CreateAsset<Texture2D>("textures/box-specular.png");
@@ -399,29 +397,13 @@ void DefaultSceneLayer::_CreateScene()
 
 		//Skybox in Maitnence
 		// Setting up our enviroment map
-		//scene->SetSkyboxTexture(SkyCubemap);
-		//scene->SetSkyboxShader(skyboxShader);
+		scene->SetSkyboxTexture(SkyCubemap);
+		scene->SetSkyboxShader(skyboxShader);
 		// Since the skybox I used was for Y-up, we need to rotate it 90 deg around the X-axis to convert it to z-up 
-		//scene->SetSkyboxRotation(glm::rotate(MAT4_IDENTITY, glm::half_pi<float>(), glm::vec3(1.0f, 0.0f, 0.0f)));
-
-		// Loading in a color lookup table
-		Texture3D::Sptr lutCool = ResourceManager::CreateAsset<Texture3D>("luts/LUT_Cool.CUBE");
-		Texture3D::Sptr lutWarm = ResourceManager::CreateAsset<Texture3D>("luts/LUT_Warm.CUBE");
-		Texture3D::Sptr lutCustom = ResourceManager::CreateAsset<Texture3D>("luts/LUT_Custom.CUBE");
-		
-		// Configure the color correction LUT
-		scene->SetColorLUT(lutCustom);
+		scene->SetSkyboxRotation(glm::rotate(MAT4_IDENTITY, glm::half_pi<float>(), glm::vec3(1.0f, 0.0f, 0.0f)));
 		
 		// Create our materials
 		// This will be our box material, with no environment reflections
-		Material::Sptr boxMaterial = ResourceManager::CreateAsset<Material>(deferredForward);
-		{
-			boxMaterial->Name = "Box";
-			boxMaterial->Set("u_Material.AlbedoMap", boxTexture);
-			boxMaterial->Set("u_Material.Shininess", 0.1f);
-			boxMaterial->Set("u_Material.NormalMap", normalMapDefault);
-		}
-		
 		Material::Sptr worldMat = ResourceManager::CreateAsset<Material>(StandardShader);
 		{
 			worldMat->Name = "WorldMaterial";
@@ -462,7 +444,7 @@ void DefaultSceneLayer::_CreateScene()
 			swordMat->Set("u_Custom.rimColor", glm::vec3(1.0f, 1.0f, 1.0f));
 			swordMat->Set("u_Custom.rim", 1.0f);
 			swordMat->Set("u_Custom.isOn", false);
-			swordMat->Set("toggleColorCorrect", true);
+			swordMat->Set("toggleColorCorrect", false);
 			swordMat->Set("emissiveMap", swordTex_EMap);
 			swordMat->Set("emissiveColor", glm::vec3(0.0f, 1.0f, 1.0f));
 			swordMat->Set("emissiveIntensity", 1.0f);
@@ -488,7 +470,7 @@ void DefaultSceneLayer::_CreateScene()
 			ballMat->Set("u_Custom.rimColor", glm::vec3(1.1f, 1.7f, 3.5f));
 			ballMat->Set("u_Custom.rim", 1.0f);
 			ballMat->Set("u_Custom.isOn", false);
-			ballMat->Set("toggleColorCorrect", true);
+			ballMat->Set("toggleColorCorrect", false);
 			ballMat->Set("emissiveMap", ballTex_EMap);
 			ballMat->Set("emissiveColor", glm::vec3(1.0f,0.0f,0.0f));
 			ballMat->Set("emissiveIntensity", 1.0f);
@@ -523,28 +505,15 @@ void DefaultSceneLayer::_CreateScene()
 			pipeMat->Set("u_Custom.rim", 0.7f);
 			pipeMat->Set("u_Custom.isOn", false);
 			pipeMat->Set("toggleColorCorrect", false);
+			pipeMat->Set("emissiveMap", pipeTex_EMap);
+			pipeMat->Set("emissiveColor", glm::vec3(0.77f, 0.0f, 1.0f));
+			pipeMat->Set("emissiveIntensity", 1.0f);
+			pipeMat->Set("emissiveIsOn", true);
 
 			pipeMat->Set("texColor", pipeTex);
 			pipeMat->Set("texIsOn", textureIsOn);
 		}
 		materials.push_back(pipeMat);
-
-		// This will be the reflective material, we'll make the whole thing 90% reflective
-		
-		// This will be the reflective material, we'll make the whole thing 50% reflective
-		
-		
-		Material::Sptr normalmapMat = ResourceManager::CreateAsset<Material>(deferredForward);
-		{
-			Texture2D::Sptr normalMap       = ResourceManager::CreateAsset<Texture2D>("textures/normal_map.png");
-			Texture2D::Sptr diffuseMap      = ResourceManager::CreateAsset<Texture2D>("textures/bricks_diffuse.png");
-
-			normalmapMat->Name = "Tangent Space Normal Map";
-			normalmapMat->Set("u_Material.AlbedoMap", diffuseMap);
-			normalmapMat->Set("u_Material.NormalMap", normalMap);
-			normalmapMat->Set("u_Material.Shininess", 0.5f);
-			normalmapMat->Set("u_Scale", 0.1f);
-		}
 
 		// Create some lights for our scene
 		GameObject::Sptr lightParent = scene->CreateGameObject("Lights");
@@ -561,15 +530,6 @@ void DefaultSceneLayer::_CreateScene()
 			lightComponent->SetRadius(20.0f);
 			lightComponent->SetIntensity(18.0f);
 		}
-
-		// We'll create a mesh that is a simple plane that we can resize later
-		MeshResource::Sptr planeMesh = ResourceManager::CreateAsset<MeshResource>();
-		planeMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(1.0f)));
-		planeMesh->GenerateMesh();
-
-		MeshResource::Sptr sphere = ResourceManager::CreateAsset<MeshResource>();
-		sphere->AddParam(MeshBuilderParam::CreateIcoSphere(ZERO, ONE, 5));
-		sphere->GenerateMesh();
 
 		// Set up the scene's camera
 		GameObject::Sptr camera = scene->MainCamera->GetGameObject()->SelfRef();
@@ -598,10 +558,35 @@ void DefaultSceneLayer::_CreateScene()
 		GameObject::Sptr sword = scene->CreateGameObject("Sword");
 		{
 			sword->SetPostion(glm::vec3(-3.05f, -2.75f, 2.83f));
-			sword->SetRotation(glm::vec3(90.0f, 0.0f, -180.0f));
+			sword->SetRotation(glm::vec3(0.0f, 0.0f, 0.0f));
 			RenderComponent::Sptr renderer = sword->Add<RenderComponent>();
 			renderer->SetMesh(swordMesh);
 			renderer->SetMaterial(swordMat);
+
+			//Particles
+			float SpawnRate = 1.0f / 1.0f;
+			GameObject::Sptr particles = scene->CreateGameObject("Particles");
+			sword->AddChild(particles);
+			particles->SetPostion(glm::vec3(0.0f, 0.0f, 4.0f));
+
+			ParticleSystem::Sptr particleManager = particles->Add<ParticleSystem>();
+
+			particleManager->_gravity = glm::vec3(0.0f,0.0f,-9.81);
+
+			ParticleSystem::ParticleData emitter;
+			emitter.Type = ParticleType::BoxEmitter;
+			//emitter.TexID = 0;
+			emitter.Position = glm::vec3(0.0f, 0.0f, 0.0f);
+			emitter.Color = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f);
+			emitter.Lifetime = 1.0f;
+			emitter.Velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+
+			emitter.BoxEmitterData.Timer = SpawnRate;
+			emitter.BoxEmitterData.HalfExtents = glm::vec3(0.3f, 0.1f, 3.0f);
+			emitter.BoxEmitterData.SizeRange = glm::vec2(0.2f, 0.2f);
+			emitter.BoxEmitterData.LifeRange = glm::vec2(5.0f, 5.0f);
+
+			particleManager->AddEmitter(emitter);
 		}
 		GameObject::Sptr ball = scene->CreateGameObject("Ball");
 		{
@@ -610,6 +595,31 @@ void DefaultSceneLayer::_CreateScene()
 			RenderComponent::Sptr renderer = ball->Add<RenderComponent>();
 			renderer->SetMesh(ballMesh);
 			renderer->SetMaterial(ballMat);
+
+			//Particles
+			float SpawnRate = 1.0f / 0.5f;
+			GameObject::Sptr particles = scene->CreateGameObject("Particles");
+			ball->AddChild(particles);
+			particles->SetPostion(glm::vec3(0.0f, 0.0f, 0.0f));
+
+			ParticleSystem::Sptr particleManager = particles->Add<ParticleSystem>();
+
+			particleManager->_gravity = glm::vec3(0.0f,0.0f,-9.81f);
+
+			ParticleSystem::ParticleData emitter;
+			emitter.Type = ParticleType::StreamEmitter;
+			//emitter.TexID = 0;
+			emitter.Position = glm::vec3(0.0f, 0.0f, -1.0f);
+			emitter.Color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+			emitter.Lifetime = 1.0f;
+			emitter.Velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+
+			emitter.ConeEmitterData.Angle = glm::radians(30.0f);
+			emitter.ConeEmitterData.Timer = SpawnRate;
+			emitter.ConeEmitterData.SizeRange = glm::vec2(0.15f, 0.2f);
+			emitter.ConeEmitterData.LifeRange = glm::vec2(5.0f, 5.0f);
+
+			particleManager->AddEmitter(emitter);
 		}
 		GameObject::Sptr pipe = scene->CreateGameObject("Pipe");
 		{
@@ -618,6 +628,30 @@ void DefaultSceneLayer::_CreateScene()
 			RenderComponent::Sptr renderer = pipe->Add<RenderComponent>();
 			renderer->SetMesh(pipeMesh);
 			renderer->SetMaterial(pipeMat);
+			//Particles
+			float SpawnRate = 1.0f / 1000.0f;
+			GameObject::Sptr particles = scene->CreateGameObject("Particles");
+			pipe->AddChild(particles);
+			particles->SetPostion(glm::vec3(0.0f, 0.0f, 0.0f));
+
+			ParticleSystem::Sptr particleManager = particles->Add<ParticleSystem>();
+
+			particleManager->_gravity = glm::vec3(0.0f);
+
+			ParticleSystem::ParticleData emitter;
+			emitter.Type = ParticleType::ConeEmitter;
+			//emitter.TexID = 0;
+			emitter.Position = glm::vec3(0.0f,0.0f,0.0f);
+			emitter.Color = glm::vec4(0.7f, 0.0f, 1.0f, 1.0f);
+			emitter.Lifetime = 1.0f;
+			emitter.Velocity = glm::vec3(0.0f, 30.0f, 0.0f);
+				
+			emitter.ConeEmitterData.Angle = glm::radians(30.0f);
+			emitter.ConeEmitterData.Timer = SpawnRate;
+			emitter.ConeEmitterData.SizeRange = glm::vec2(0.2f, 0.2f);
+			emitter.ConeEmitterData.LifeRange = glm::vec2(0.0f, 0.2f);
+
+			particleManager->AddEmitter(emitter);
 		}
 
 		GameObject::Sptr demoBase = scene->CreateGameObject("Demo Parent");
@@ -633,48 +667,18 @@ void DefaultSceneLayer::_CreateScene()
 			trigger->Add<TriggerVolumeEnterBehaviour>();
 		}
 		
-		/////////////////////////// UI //////////////////////////////
-		/*
-		GameObject::Sptr canvas = scene->CreateGameObject("UI Canvas");
+		/*GameObject::Sptr shadowCaster = scene->CreateGameObject("Shadow Light");
 		{
-			RectTransform::Sptr transform = canvas->Add<RectTransform>();
-			transform->SetMin({ 16, 16 });
-			transform->SetMax({ 256, 256 });
+			// Set position in the scene
+			shadowCaster->SetPostion(glm::vec3(3.0f, 3.0f, 5.0f));
+			shadowCaster->LookAt(glm::vec3(0.0f));
 
-			GuiPanel::Sptr canPanel = canvas->Add<GuiPanel>();
-
-
-			GameObject::Sptr subPanel = scene->CreateGameObject("Sub Item");
-			{
-				RectTransform::Sptr transform = subPanel->Add<RectTransform>();
-				transform->SetMin({ 10, 10 });
-				transform->SetMax({ 128, 128 });
-
-				GuiPanel::Sptr panel = subPanel->Add<GuiPanel>();
-				panel->SetColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-
-				panel->SetTexture(ResourceManager::CreateAsset<Texture2D>("textures/upArrow.png"));
-
-				Font::Sptr font = ResourceManager::CreateAsset<Font>("fonts/Roboto-Medium.ttf", 16.0f);
-				font->Bake();
-
-				GuiText::Sptr text = subPanel->Add<GuiText>();
-				text->SetText("Hello world!");
-				text->SetFont(font);
-
-				monkey1->Get<JumpBehaviour>()->Panel = text;
-			}
-
-			canvas->AddChild(subPanel);
-		}
-		*/
-
-		/*GameObject::Sptr particles = scene->CreateGameObject("Particles");
-		{
-			ParticleSystem::Sptr particleManager = particles->Add<ParticleSystem>();  
-			particleManager->AddEmitter(glm::vec3(0.0f), glm::vec3(0.0f, -1.0f, 10.0f), 10.0f, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)); 
+			// Create and attach a renderer for the monkey
+			ShadowCamera::Sptr shadowCam = shadowCaster->Add<ShadowCamera>();
+			shadowCam->SetProjection(glm::perspective(glm::radians(120.0f), 1.0f, 0.1f, 100.0f));
 		}*/
 
+		/////////////////////////// UI //////////////////////////////
 		GuiBatcher::SetDefaultTexture(ResourceManager::CreateAsset<Texture2D>("textures/ui-sprite.png"));
 		GuiBatcher::SetDefaultBorderRadius(8);
 	

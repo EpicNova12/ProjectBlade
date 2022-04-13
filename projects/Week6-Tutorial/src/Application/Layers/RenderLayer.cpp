@@ -15,7 +15,7 @@
 #include <GLM/gtc/type_ptr.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <GLM/gtx/common.hpp> // for fmod (floating modulus)
-//#include "Gameplay/Components/ShadowCamera.h"
+#include "Gameplay/Components/ShadowCamera.h"
 
 
 RenderLayer::RenderLayer() :
@@ -296,10 +296,10 @@ void RenderLayer::_AccumulateLighting()
 
 		// Draw the fullscreen quad to accumulate the lights
 		_fullscreenQuad->Draw();
-	});*/
+	});
 
 	// Unbind the lighting FBO so we can read its textures
-	_lightingFBO->Unbind();
+	_lightingFBO->Unbind();*/
 }
 
 void RenderLayer::_Composite()
